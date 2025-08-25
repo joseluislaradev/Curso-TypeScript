@@ -79,9 +79,11 @@ sayHelloFromFunction(sayHello);
 
 //Type alias - Nos permite crear un nuevo tipo a partir de un conjunto de tipos existentes, para reutilizarlos en diferentes partes del codigo, definir nosotros el contrato
 type Hero = {
+  readonly id?: string; //Con el readonly se indica que esa propiedad no se puede modificar, y con el ? que es opcional, no es inmutable puesto que lo uncioq eu hace es que typescript nos amrque un error que no se uede hacer pero en ralidad cuando creamos el javascript si lo permite porque no existe en tiemo de ejecucion, par aeso se usaria algo de js como object.freeze
   name: string;
   age: number;
   powers: string[];
+  isActive?: boolean;
 };
 
 let ironMan: Hero = {
@@ -93,14 +95,19 @@ let ironMan: Hero = {
 function crearHero(hero: Hero): Hero {
   //Tiene que devolver un Hero, de parametro es un hero de tipo hero
   return {
+    id: crypto.randomUUID(),
     name: hero.name,
     age: hero.age,
     powers: hero.powers,
+    isActive: hero.isActive,
   };
 }
 
-const thor = crearHero({
-  name: "Thor",
-  age: 35,
-  powers: ["super strength", "flight"],
-});
+const thor = Object.freeze(
+  crearHero({
+    name: "Thor",
+    age: 35,
+    powers: ["super strength", "flight"],
+    isActive: true,
+  })
+);
