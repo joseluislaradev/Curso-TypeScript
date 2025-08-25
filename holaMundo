@@ -1,0 +1,106 @@
+/*jAVASCRIPT es de tipado dinamico(significa que no es necesario declarar el tipo de una variable al momento de crearla el interprete lo deduce) 
+y debil(significa que se puede cambiar el tipo de una variable en cualquier momento sin hacerlos repstar)
+
+TYPESCRIPT es de tipado estatico(significa que es necesario declarar el tipo de una variable al momento de crearla)
+y fuerte(significa que no se puede cambiar el tipo de una variable una vez que ha sido declarada) */
+
+const saludo = "Hola Mundo";
+
+//La inferencia es que TypeScript puede inferir el tipo de la variable persona para despues dar erro si se intenta modificar.
+const persona = {
+  name: "Juan",
+  age: 30,
+  email: "juan@example.com",
+};
+
+//EN typescript siempre tenemos que evitar tener que escribir los minimos tipos posibles, todo lo que ya haga automatico mejor
+const number = 1;
+let n: number = 2;
+
+const booleano = true;
+let b: boolean = false;
+
+//... Tambien esta el tipo any que es cuando react no lo puede inferir o directmante se lo ponemos, est dice que puede ser de cualquier tipo, INGORANDO EL TIPADO DE TYPESCRIPT PORQUE YA NO LO RECONOCE}
+let c: any = "Hola";
+c = 123; // Malo porque pierde el tipado
+c = true;
+
+//Otro smilar es unknown que es describe un valor que puede ser de cualquier tipo, pero a diferencia de any, no se puede acceder a sus propiedades hasta que se haya verificado su tipo.
+let d: unknown = "Hola";
+d = 123;
+d = true;
+
+//Never - Representa un valor que nunca ocurre. Es el tipo de retorno de funciones que lanzan excepciones o que nunca terminan su ejecución., entonces nunca tiene posibilidad si siqueira de llenar```
+d = true;
+
+//Never - Representa un valor que nunca ocurre. Es el tipo de retorno de funciones que lanzan excepciones o que nunca terminan su ejecución., entonces nunca tiene posibilidad si siqueira de llenar a las líneas de return porque cortan la ejecución
+const error = (message: string): never => {
+  throw new Error(message);
+};
+
+//Funciones - Las funciones por defecto no tienen inferencia, por lo que puede causar errores e cosas ya que pone tipos any
+function saludar(persona: { name: string; age: number }): number {
+  //si se le pasa un array le decimos los tipos, infere que el tipo de la ufuncion es entero porque devuelve age y age lo es, le podemos decir directmante poneindo dos putnos
+  console.log(`Hola, ${persona.name}. Tienes ${persona.age} años.`);
+  return persona.age;
+}
+
+saludar({ name: "Juan", age: 30 });
+
+const sayHelloFromFunction = (fn: (name: string) => void) => {
+  //Se le deice que es de tipo funciton, pero function es muy general, es el any de las funciones pro eso en us lugar le pasamos que funcion recibe en este caso una con un pasremtro name llamado string y que retorna un void (puede o no devolver algo, no nos importa)
+  fn("Juan");
+};
+
+const sayHello = (name: string): void => {
+  console.log(`Hola, ${name}!`);
+};
+
+sayHelloFromFunction(sayHello);
+
+//Objetos
+//Cuando se crea un objeto se pude inferir sus tipos automáticamente y te crea un contrato de que asi es el objeto, por loq ue no podemos agregar mas propiedades
+// const hero = {
+//   name: "Superman",
+//   age: 30,
+//   powers: ["super strength", "flight"],
+// };
+
+// function crearHero(name: string, age: number, powers: string[]) {
+//   return {
+//     name,
+//     age,
+//     powers,
+//   };
+// }
+
+// Esta forma de crear un hero no es la mejor porque no sabemos si siempre tendrá las mismas propiedades
+// const thor = crearHero("Thor", 35, ["super strength", "flight"]);
+
+//Type alias - Nos permite crear un nuevo tipo a partir de un conjunto de tipos existentes, para reutilizarlos en diferentes partes del codigo, definir nosotros el contrato
+type Hero = {
+  name: string;
+  age: number;
+  powers: string[];
+};
+
+let ironMan: Hero = {
+  name: "Iron Man",
+  age: 40,
+  powers: ["intelligence", "wealth"],
+};
+
+function crearHero(hero: Hero): Hero {
+  //Tiene que devolver un Hero, de parametro es un hero de tipo hero
+  return {
+    name: hero.name,
+    age: hero.age,
+    powers: hero.powers,
+  };
+}
+
+const thor = crearHero({
+  name: "Thor",
+  age: 35,
+  powers: ["super strength", "flight"],
+});
