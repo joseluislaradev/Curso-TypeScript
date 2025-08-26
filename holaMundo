@@ -2,7 +2,10 @@
 y debil(significa que se puede cambiar el tipo de una variable en cualquier momento sin hacerlos repstar)
 
 TYPESCRIPT es de tipado estatico(significa que es necesario declarar el tipo de una variable al momento de crearla)
-y fuerte(significa que no se puede cambiar el tipo de una variable una vez que ha sido declarada) */
+y fuerte(significa que no se puede cambiar el tipo de una variable una vez que ha sido declarada) 
+
+
+TypeScript escribe mas codigo regulamente que javascript ahciendolo mas pesado pero con uan buena razon y es la seguridad de tipos*/
 
 const saludo = "Hola Mundo";
 
@@ -28,9 +31,6 @@ c = true;
 //Otro smilar es unknown que es describe un valor que puede ser de cualquier tipo, pero a diferencia de any, no se puede acceder a sus propiedades hasta que se haya verificado su tipo.
 let d: unknown = "Hola";
 d = 123;
-d = true;
-
-//Never - Representa un valor que nunca ocurre. Es el tipo de retorno de funciones que lanzan excepciones o que nunca terminan su ejecución., entonces nunca tiene posibilidad si siqueira de llenar```
 d = true;
 
 //Never - Representa un valor que nunca ocurre. Es el tipo de retorno de funciones que lanzan excepciones o que nunca terminan su ejecución., entonces nunca tiene posibilidad si siqueira de llenar a las líneas de return porque cortan la ejecución
@@ -78,12 +78,17 @@ sayHelloFromFunction(sayHello);
 // const thor = crearHero("Thor", 35, ["super strength", "flight"]);
 
 //Type alias - Nos permite crear un nuevo tipo a partir de un conjunto de tipos existentes, para reutilizarlos en diferentes partes del codigo, definir nosotros el contrato
+
+type HeroId = `${string}-${string}-${string}-${string}-${string}`; //Tipo que representa un UUID, esto es un templaete union types
+type HeroPowerScale = "local" | "planetario" | "galactico" | "intergalactico"; //ESto son los possibles que valores que podra tener este tipo (Union types)
+
 type Hero = {
-  readonly id?: string; //Con el readonly se indica que esa propiedad no se puede modificar, y con el ? que es opcional, no es inmutable puesto que lo uncioq eu hace es que typescript nos amrque un error que no se uede hacer pero en ralidad cuando creamos el javascript si lo permite porque no existe en tiemo de ejecucion, par aeso se usaria algo de js como object.freeze
+  readonly id?: HeroId; //Con el readonly se indica que esa propiedad no se puede modificar, y con el ? que es opcional, no es inmutable puesto que lo uncioq eu hace es que typescript nos amrque un error que no se uede hacer pero en ralidad cuando creamos el javascript si lo permite porque no existe en tiemo de ejecucion, par aeso se usaria algo de js como object.freeze
   name: string;
   age: number;
   powers: string[];
   isActive?: boolean;
+  powerScale?: HeroPowerScale; //Con esto limitamos los posibles valores que puede tener esa propiedad
 };
 
 let ironMan: Hero = {
@@ -111,3 +116,77 @@ const thor = Object.freeze(
     isActive: true,
   })
 );
+
+ironMan.powerScale = "galactico";
+
+//template union types
+
+type HexadecimalColor = `#${string}`;
+
+const color: HexadecimalColor = "#ff5733";
+//const color2: HexadecimalColor = "ff5733AA"; //Da error porque no comienza con #
+
+//Intersection types
+
+type HeroWithPowerScale = Hero & { powerScale: HeroPowerScale }; //Es un nuevo tipo combinacion de otros.
+
+//Type from value
+const address: { [key: string]: string | number } = {
+  street: "123 Main St",
+  city: "Anytown",
+  zip: 12345,
+};
+
+type Address = typeof address; // Typeof aqui obtieen la estuctura del tipo que se dice para podelo reutilizar
+
+const address2: Address = {
+  street: "456 Elm St",
+  city: "Othertown",
+  zip: 67890,
+};
+
+// type from function return
+
+function crearDireccion(street: string, city: string, zip: number) {
+  return {
+    street,
+    city,
+    zip,
+  };
+}
+
+type AddressFromFunction = ReturnType<typeof crearDireccion>; //Obtiene el tipo de retorno de la función
+
+const address3: AddressFromFunction = {
+  street: "789 Oak St",
+  city: "Sometown",
+  zip: 54321,
+};
+
+/*
+JUego gato
+
+[
+  ['x', 'o', 'x'],
+  ['o', 'x', 'o'],
+  ['x', 'o', 'x']
+]
+
+*/
+
+type CellValue = "x" | "o" | "";
+type GameBoard = [
+  //ESto es una tupla, en TypeScript es un array con una longitud fija y elementos posicionales.
+  [CellValue, CellValue, CellValue],
+  [CellValue, CellValue, CellValue],
+  [CellValue, CellValue, CellValue]
+];
+
+const gameBoard: GameBoard = [
+  ["x", "o", "x"],
+  ["o", "x", "o"],
+  ["x", "o", "x"],
+];
+
+type RGB = [number, number, number]; //Tupla que dice que son 3 posiciones y numeros
+const colorPrimary: RGB = [255, 87, 51];
