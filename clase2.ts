@@ -64,3 +64,54 @@ if (canvas2 instanceof HTMLCanvasElement) {
   //Aqui si comprobamos que es un canvas
   const contexto = canvas2.getContext("2d"); //TypeScript usa la inferencia, porque sabemos que solo podemos ojecuta esta funcion si efectivamente es un canvas, si no no, y no truena, porque lee la validacion del if
 }
+
+/*Interface
+Forma para definir los contratos que deben seguir al igual que con type pero con pequeñas diferencias, ya que puede extender productos mas facil, pero se pueden crear dos interfaces con el mismo nombre sin que de error.
+
+Las interfaces tambien desaparecen cuando se hace la conversion a javascript, no son validaciones.
+
+Con interfaces no se puede hacer tipos rpimitidovs como nventarnos nuestro tipos.
+
+*/
+
+interface Producto {
+  id: number;
+  nombre: string;
+  precio: number;
+}
+
+interface Zapatilla extends Producto {
+  talla: number;
+  color: string;
+}
+
+interface Carrito {
+  productos: Producto[];
+  total: number;
+}
+
+interface CarritoOps {
+  addProducto(producto: Producto): void;
+  removeProducto(id: number): void;
+  calcularTotal(): number;
+}
+
+const carrito: Carrito = {
+  productos: [
+    { id: 1, nombre: "Producto 1", precio: 100 },
+    { id: 2, nombre: "Producto 2", precio: 200 },
+    { id: 3, nombre: "Producto 3", precio: 300 },
+  ],
+  total: 600,
+};
+
+//Narrowing es una tecnica para refinar el tipo de una variable en tiempo de ejecucion, permitiendo acceder a propiedades o metodos que son especificos de un tipo en particular.
+
+function mostrarLongitud(obj: string | string[]) {
+  if (typeof obj === "string") {
+    // Es intentar descartar los tipos para que no se produzca un error, al querer usar una funcion que no existe debajo
+    console.log("Longitud de la c adena:", obj.length);
+  } else {
+    console.log("Longitud del arreglo:", obj.length);
+  }
+}
